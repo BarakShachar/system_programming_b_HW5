@@ -27,18 +27,7 @@ namespace ariel{
             }
 
             OrgChart& add_sub(T sup, T sub){
-                for (auto it = this->begin_level_order(); it != this->end_level_order(); ++it){
-                    if((*it) == sup){
-                        Member* curr_member = (&it);
-                        Member* new_member = new Member(sub);
-                        curr_member->employees.push_back(new_member);
-                        if (curr_member->superior->employees.size()-2 >= 0){
-                            curr_member->superior->employees[curr_member->superior->employees.size()-2]->brother = new_member;
-                        }
-                        return *this;
-                    }
-                }
-                throw std::invalid_argument("cant find sup");;
+                return *this;
             }
 
             friend std::ostream &operator<<(std::ostream& os , const OrgChart &chart){
