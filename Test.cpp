@@ -49,7 +49,7 @@ TEST_CASE("LEVEL_ORDER_ITERATOR"){
     vector<string> ans = {"1", "1.1", "1.2", "1.3", "1.1.1", "1.1.2", "1.1.3", "1.1.4", "1.2.1", "1.2.2", "1.3.1", "1.3.2"};
     size_t count = 0;
     for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it){
-        CHECK(ans[count].compare((*it)));
+        CHECK(ans[count] == (*it));
         count++;
     }
 }
@@ -71,7 +71,7 @@ TEST_CASE("PREORDER_ITERATOR"){
     vector<string> ans = {"1", "1.1", "1.1.1", "1.1.2", "1.1.3", "1.1.4", "1.2", "1.2.1", "1.2.2", "1.3", "1.3.1", "1.3.2"};
     size_t count = 0;
     for (auto it = organization.begin_preorder(); it != organization.end_preorder(); ++it){
-        CHECK(ans[count].compare((*it)));
+        CHECK(ans[count] == (*it));
         count++;
     }
 }
@@ -93,7 +93,7 @@ TEST_CASE("REVERSE_ORDER_ITERATOR"){
     vector<string> ans = {"1.1.1", "1.1.2", "1.1.3", "1.1.4", "1.2.1", "1.2.2", "1.3.1", "1.3.2", "1.1", "1.2", "1.3", "1"};
     size_t count = 0;
     for (auto it = organization.begin_reverse_order(); it != organization.reverse_order(); ++it){
-        CHECK(ans[count].compare((*it)));
+        CHECK(ans[count] == (*it));
         count++;
     }
     
@@ -116,7 +116,7 @@ TEST_CASE("NORMAL ITERATOR"){
     vector<string> ans = {"1", "1.1", "1.2", "1.3", "1.1.1", "1.1.2", "1.1.3", "1.1.4", "1.2.1", "1.2.2", "1.3.1", "1.3.2"};
     size_t count = 0;
     for (auto element : organization){
-        CHECK(ans[count].compare(element));
+        CHECK(ans[count]== element);
         count++;
     }
 }
@@ -138,6 +138,7 @@ TEST_CASE("SIZE"){
     size_t count = 0;
     vector<int> ans = {1, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 5};
     for (auto it = organization.begin_level_order(); it != organization.end_level_order(); ++it){
-        CHECK(it->size()== ans[count]);
+        CHECK(it->size() == ans[count]);
+        count++;
     }
 }
