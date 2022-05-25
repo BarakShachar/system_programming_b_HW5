@@ -10,9 +10,10 @@ namespace ariel{
     class OrgChart{
         struct Member{
             T title;
-            Member *superior;
+            Member* superior;
+            Member* next;
             std::vector<Member*> employees;
-            Member(T val) : title(val), superior(nullptr), employees() {}
+            Member(T val) : title(val), superior(nullptr), next(nullptr), employees() {}
         };
         Member* root;
         public:
@@ -20,7 +21,6 @@ namespace ariel{
             OrgChart& add_root(T new_root){
                 if (root == nullptr){
                     root = new Member(new_root);
-                    // TODO: pointer or not? 
                 }
                 else{
                     root->title = new_root;
@@ -32,28 +32,44 @@ namespace ariel{
                 if (root == nullptr){
                     throw std::invalid_argument("cant find superior");
                 }
-                std::queue<Member*> find_sub;
-                find_sub.push(root);
-                while(find_sub.size() > 0){
-                    if (find_sub.front()->title == sup){
+                std::queue<Member*> find_sub_queue;
+                find_sub_queue.push(root);
+                while(find_sub_queue.size() > 0){
+                    if (find_sub_queue.front()->title == sup){
                         Member* sub_member = new Member(sub);
-                        find_sub.front()->employees.push_back(sub_member);
-                        while(!find_sub.empty()){
-                            find_sub.pop();
+                        find_sub_queue.front()->employees.push_back(sub_member);
+                        while(!find_sub_queue.empty()){
+                            find_sub_queue.pop();
                         }
                         return *this;
                     }
-                    Member* curr_member = find_sub.front();
-                    find_sub.pop();
+                    Member* curr_member = find_sub_queue.front();
+                    find_sub_queue.pop();
                     for (size_t i = 0; i<curr_member->employees.size();i++){
-                        find_sub.push(curr_member->employees[i]);
+                        find_sub_queue.push(curr_member->employees[i]);
                     }
                 }
                 throw std::invalid_argument("cant find superior");
             }
 
             friend std::ostream &operator<<(std::ostream& os , const OrgChart &chart){
-                std::cout << "hello" << std::endl;
+                if (chart.root == nullptr) {
+                    return os;
+                }
+                std::queue<Member*> osq;
+                osq.push(chart.root);
+                while (!osq.empty()) {
+                    Member* curr = osq.front();
+                    osq.pop();
+                    if (curr->employees.size() > 0){
+                        std::cout << " " << curr->title << "->" << std::endl;
+                    }
+                    for (size_t i =0; i<curr->employees.size(); i++){
+                        osq.push(curr->employees[i]);
+                        std::cout << curr->employees[i]->title << " ";
+                    }
+                    std::cout << std::endl;
+                }
                 return os;
             }
 
@@ -194,6 +210,27 @@ namespace ariel{
                 return end_level_order();
             }
 
+            ~OrgChart(){
+                if (root == nullptr){
+                    return;
+                }
+                std::queue<Member*> delete_queue;
+                delete_queue.push(root);
+                while (!delete_queue.empty()){
+                    Member* curr_delete = delete_queue.front();
+                    delete_queue.pop();
+                    for (size_t j = 0; j<curr_delete->employees.size();j++){
+                        delete_queue.push(curr_delete->employees[j]);
+                    }
+                    delete curr_delete;
+                }
+            }
+
+            //make tidy functions
+            OrgChart (const OrgChart& copy_chart){}
+            OrgChart& operator=(const OrgChart& copy_chart)=delete;
+            OrgChart(OrgChart && move_chart)noexcept{};
+            OrgChart& operator=(OrgChart&& move_chart)=delete;
             private:
                 std::vector<Member*> povector;
     };
