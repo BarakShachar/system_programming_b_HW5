@@ -34,6 +34,7 @@ namespace ariel{
                 }
                 std::queue<Member*> find_sup_queue;
                 find_sup_queue.push(root);
+                // check all members to find the sup
                 while(find_sup_queue.size() > 0){
                     if (find_sup_queue.front()->title == sup){
                         Member* sub_member = new Member(sub);
@@ -49,6 +50,7 @@ namespace ariel{
                         find_sup_queue.push(curr_member->employees[i]);
                     }
                 }
+                //we didnt found sup
                 throw std::invalid_argument("cant find superior");
             }
 
@@ -109,6 +111,7 @@ namespace ariel{
             };
 
             void root_null_throw(){
+                // check if root null for the iterator
                 if (root == nullptr){
                     throw std::invalid_argument("empty chart");
                 }
@@ -119,6 +122,7 @@ namespace ariel{
                 std::vector<Member*> iterator_vec;
                 size_t i = 0;
                 iterator_vec.push_back(root);
+                // go over all members and correct the pointers
                 while (i<iterator_vec.size()){
                     for (size_t j = 0; j<iterator_vec[i]->employees.size();j++){
                         iterator_vec.push_back(iterator_vec[i]->employees[j]);
@@ -141,6 +145,7 @@ namespace ariel{
                 std::queue<Member*> queuetostack;
                 std::stack<Member*> rlostack;
                 queuetostack.push(root);
+                // go over all members and correct the pointers
                 while(!queuetostack.empty()){
                     Member* temp = queuetostack.front();
                     queuetostack.pop();
@@ -168,6 +173,7 @@ namespace ariel{
             }
 
             void fill_vector_preorder(Member* curr){
+                // fill vector for pre_order
                 if (curr!=nullptr){
                     povector.push_back(curr);
                     for (size_t i = 0; i < curr->employees.size(); i++){
@@ -179,6 +185,7 @@ namespace ariel{
             chart_itertaor begin_preorder() {
                 root_null_throw();
                 this->fill_vector_preorder(root);
+                // go over all members and correct the pointers
                 for (size_t i = 0; i<povector.size(); i++){
                     povector[i]->next = (i!=povector.size()-1) ? povector[i+1] : nullptr;
                 }
